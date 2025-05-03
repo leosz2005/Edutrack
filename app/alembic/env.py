@@ -5,20 +5,22 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
+from app.db.models import *
+
 from alembic import context
 
 # --- Cargar .env ---
 from dotenv import load_dotenv
+
+# --- Importar settings y base de modelos ---
+from app.core.config import settings
+from app.db.base import Base  # <- Asegúrate que este Base importa todos tus modelos
 
 # Carga el .env en la raíz del proyecto
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 
 # --- Agregar la carpeta 'app' al sys.path ---
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-# --- Importar settings y base de modelos ---
-from core.config import settings
-from db.base import Base  # <- Asegúrate que este Base importa todos tus modelos
 
 # --- Configuración de Alembic ---
 config = context.config

@@ -6,9 +6,9 @@ import enum
 from app.db.base import Base
 
 class PaymentStatus(str, enum.Enum):
-    pending = "PENDING"
-    completed = "COMPLETED"
-    failed = "FAILED"
+    PENDING = "pending"
+    COMPLETED = "completed"
+    FAILED = "failed"
 
 class Payment(Base):
     __tablename__ = "payments"
@@ -17,7 +17,7 @@ class Payment(Base):
     student_id = Column(Integer, ForeignKey("students.id"), nullable=False)
     amount = Column(Float, nullable=False)
     currency = Column(String(3), nullable=False, default="EUR")
-    status = Column(Enum(PaymentStatus), default=PaymentStatus.pending, nullable=False)
+    status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False)
     payment_method = Column(String(50), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

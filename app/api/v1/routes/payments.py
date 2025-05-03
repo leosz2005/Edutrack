@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
+from datetime import date
+
+from app.db.models.payment import Payment, PaymentStatus
 
 from app.schemas import payment as payment_schema
 from app.crud import payment as payment_crud
@@ -8,7 +11,7 @@ from app.db.session import get_db
 
 router = APIRouter(prefix="/payments", tags=["Payments"])
 
-@router.post("/", response_model=payment_schema.PaymentOut)
+@router.post("/", response_model=payment_schema.PaymentResponse)
 def create_payment(
     payment_in: payment_schema.PaymentCreate,
     db: Session = Depends(get_db),
@@ -24,17 +27,45 @@ def create_payment(
     """
     return payment_crud.create_payment(db=db, payment=payment_in)
 
-@router.get("/", response_model=List[payment_schema.PaymentOut])
-def read_payments(db: Session = Depends(get_db)):
+@router.get("/payments", response_model=List[payment_schema.PaymentResponse])
+def get_payments(
+    db: Session = Depends(get_db),
+    status: Optional[PaymentStatus] = Query(None),
+    student_id: Optional[int] = Query(None),
+    method: Optional[str] = Query(None),
+    date_from: Optional[date] = Query(None),
+    date_to: Optional[date] = Query(None),
+):
     """
-    Retrieve a list of all payments in the database.
+    Retrieve a list of payments, optionally filtered by status, student_id, method, and date range.
+
+    Args:
+        db (Session): The active database session.
+        status (Optional[PaymentStatus]): The status of the payments to retrieve.
+        student_id (Optional[int]): The ID of the student to retrieve payments for.
+        method (Optional[str]): The payment method used by the payments to retrieve.
+        date_from (Optional[date]): The earliest date to retrieve payments for.
+        date_to (Optional[date]): The latest date to retrieve payments for.
 
     Returns:
-        List[payment_schema.PaymentOut]: A list of PaymentOut objects.
+        List[payment_schema.PaymentResponse]: A list of Payment objects, or an empty list if no matching payments were found.
     """
-    return payment_crud.get_payments(db=db)
+    query = db.query(Payment)
 
-@router.get("/{payment_id}", response_model=payment_schema.PaymentOut)
+    if status:
+        query = query.filter(Payment.status == status)
+    if student_id:
+        query = query.filter(Payment.student_id == student_id)
+    if method:
+        query = query.filter(Payment.method == method)
+    if date_from:
+        query = query.filter(Payment.created_at >= date_from)
+    if date_to:
+        query = query.filter(Payment.created_at <= date_to)
+
+    return query.all()
+
+@router.get("/{payment_id}", response_model=payment_schema.PaymentResponse)
 def read_payment(payment_id: int, db: Session = Depends(get_db)):
     """
     Retrieve a payment by ID from the database.
@@ -52,7 +83,7 @@ def read_payment(payment_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Payment not found")
     return payment
 
-@router.put("/{payment_id}", response_model=payment_schema.PaymentOut)
+@router.put("/{payment_id}", response_model=payment_schema.PaymentResponse)
 def update_payment(
     payment_id: int,
     payment_in: payment_schema.PaymentUpdate,
