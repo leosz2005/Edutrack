@@ -1,0 +1,9 @@
+Copyright (c) 2025 Leonardo Andres Sanchez Zerlin
+
+All rights reserved.
+
+This source code is provided for educational and portfolio purposes only.
+
+You may view, read, and reference this code, but you may not use, copy, modify, distribute, or deploy it without explicit written permission from the author.
+
+This project is not open source and is not intended for production use by third parties.
