@@ -14,7 +14,7 @@ def create_student(db: Session, student: StudentCreate):
     Returns:
         Student: The newly created student.
     """
-    db_student = Student(**student.dict())
+    db_student = Student(**student.model_dump())
     db.add(db_student)
     db.commit()
     db.refresh(db_student)

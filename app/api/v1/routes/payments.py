@@ -9,7 +9,7 @@ from app.schemas import payment as payment_schema
 from app.crud import payment as payment_crud
 from app.db.session import get_db
 
-router = APIRouter(prefix="/payments", tags=["Payments"])
+router = APIRouter(tags=["Payments"])
 
 @router.post("/", response_model=payment_schema.PaymentResponse)
 def create_payment(
@@ -20,6 +20,7 @@ def create_payment(
     Create a new payment in the database.
 
     Args:
+        db:
         payment_in (payment_schema.PaymentCreate): The new payment to be created.
 
     Returns:
@@ -27,7 +28,7 @@ def create_payment(
     """
     return payment_crud.create_payment(db=db, payment=payment_in)
 
-@router.get("/payments", response_model=List[payment_schema.PaymentResponse])
+@router.get("/", response_model=List[payment_schema.PaymentResponse])
 def get_payments(
     db: Session = Depends(get_db),
     status: Optional[PaymentStatus] = Query(None),

@@ -14,7 +14,7 @@ def create_teacher(db: Session, teacher_data: TeacherCreate):
         Teacher: The newly created teacher.
     """
 
-    teacher = Teacher(**teacher_data.dict())
+    teacher = Teacher(**teacher_data.model_dump())
     db.add(teacher)
     db.commit()
     db.refresh(teacher)

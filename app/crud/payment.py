@@ -13,7 +13,7 @@ def create_payment(db: Session, payment: PaymentCreate) -> Payment:
     Returns:
         Payment: The newly created payment.
     """
-    db_payment = Payment(**payment.dict())
+    db_payment = Payment(**payment.model_dump())
     db.add(db_payment)
     db.commit()
     db.refresh(db_payment)
@@ -60,7 +60,7 @@ def update_payment(db: Session, payment_id: int, payment_update: PaymentUpdate) 
     db_payment = get_payment(db, payment_id)
     if not db_payment:
         return None
-    for key, value in payment_update.dict(exclude_unset=True).items():
+    for key, value in payment_update.model_dump(exclude_unset=True).items():
         setattr(db_payment, key, value)
     db.commit()
     db.refresh(db_payment)

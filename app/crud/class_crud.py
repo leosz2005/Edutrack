@@ -4,7 +4,7 @@ from app.schemas.class_schema import ClassCreate
 
 
 def create_class(db: Session, class_data: ClassCreate):
-    db_class = Class(**class_data.dict())
+    db_class = Class(**class_data.model_dump())
     db.add(db_class)
     db.commit()
     db.refresh(db_class)
