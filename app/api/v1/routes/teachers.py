@@ -12,6 +12,7 @@ def create_teacher(teacher: TeacherCreate, db: Session = Depends(get_db)):
     Create a new teacher in the database.
 
     Args:
+        db: Instance of a class that manages the persistence operations of ORM-Mapped Objects
         teacher (TeacherCreate): The new teacher to be created.
 
     Returns:
@@ -25,6 +26,7 @@ def read_teacher(teacher_id: int, db: Session = Depends(get_db)):
     Retrieve a teacher by ID from the database.
 
     Args:
+        db: Instance of a class that manages the persistence operations of ORM-Mapped Objects
         teacher_id (int): The ID of the teacher to retrieve.
 
     Returns:

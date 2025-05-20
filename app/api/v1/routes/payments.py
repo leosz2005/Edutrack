@@ -9,7 +9,7 @@ from app.schemas import payment as payment_schema
 from app.crud import payment as payment_crud
 from app.db.session import get_db
 
-router = APIRouter(tags=["Payments"])
+router = APIRouter()
 
 @router.post("/", response_model=payment_schema.PaymentResponse)
 def create_payment(

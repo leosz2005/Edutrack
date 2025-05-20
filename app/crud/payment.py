@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from app.db.models.payment import Payment, PaymentStatus
+from app.db.models.payment import Payment
 from app.schemas.payment import PaymentCreate, PaymentUpdate
+
 
 def create_payment(db: Session, payment: PaymentCreate) -> Payment:
     """
@@ -19,6 +20,7 @@ def create_payment(db: Session, payment: PaymentCreate) -> Payment:
     db.refresh(db_payment)
     return db_payment
 
+
 def get_payment(db: Session, payment_id: int) -> Payment | None:
     """
     Retrieve a payment by ID from the database.
@@ -32,6 +34,7 @@ def get_payment(db: Session, payment_id: int) -> Payment | None:
     """
     return db.query(Payment).filter(Payment.id == payment_id).first()
 
+
 def get_payments_by_student(db: Session, student_id: int) -> list[Payment]:
     """
     Retrieve all payments for a student.
@@ -44,6 +47,7 @@ def get_payments_by_student(db: Session, student_id: int) -> list[Payment]:
         list[Payment]: A list of payments for the student.
     """
     return db.query(Payment).filter(Payment.student_id == student_id).all()
+
 
 def update_payment(db: Session, payment_id: int, payment_update: PaymentUpdate) -> Payment | None:
     """
@@ -66,6 +70,7 @@ def update_payment(db: Session, payment_id: int, payment_update: PaymentUpdate) 
     db.refresh(db_payment)
     return db_payment
 
+
 def delete_payment(db: Session, payment_id: int) -> bool:
     """
     Delete a payment from the database by its ID.
@@ -78,7 +83,6 @@ def delete_payment(db: Session, payment_id: int) -> bool:
         bool: True if the payment was successfully deleted, False if no matching payment was found.
     """
 
-    
     db_payment = get_payment(db, payment_id)
     if not db_payment:
         return False

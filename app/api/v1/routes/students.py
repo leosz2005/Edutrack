@@ -13,6 +13,7 @@ def create_student(student: StudentCreate, db: Session = Depends(get_db)):
     Create a new student in the database.
 
     Args:
+        db: Instance of a class that manages the persistence operations of ORM-Mapped Objects
         student (StudentCreate): The new student to be created.
 
     Returns:
@@ -26,6 +27,7 @@ def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     Retrieve a list of students, optionally paginated.
 
     Args:
+        db: Instance of a class that manages the persistence operations of ORM-Mapped Objects
         skip (int, optional): Number of records to skip. Defaults to 0.
         limit (int, optional): Maximum number of records to return. Defaults to 100.
 
